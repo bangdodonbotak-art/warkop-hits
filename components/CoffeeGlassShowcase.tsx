@@ -8,27 +8,61 @@ import dynamic from "next/dynamic";
  * Canvas R3F hanya di desktop + tanpa reduced-motion + WebGL tersedia.
  * Selain itu: render 3D yang sudah ada, dengan tilt CSS. Halaman tidak
  * boleh blank — kalau canvas gagal (apa pun alasannya), tampil gambar.
+ *
+ * DIAGNOSTIK SEMENTARA (13 Nov 2026): ?debug3d=1 di URL menampilkan info
+ * gate + pesan error runtime di DOM (data-3d-debug / data-3d-error),
+ * karena canvas tidak pernah mount di browser live dan error boundary
+ * selama ini menelan error-nya diam-diam. Hapus blok debug ini setelah
+ * root cause ketemu.
  */
+function debug3dEnabled(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return new URLSearchParams(window.location.search).has("debug3d");
+  } catch {
+    return false;
+  }
+}
 const CoffeeGlass3D = dynamic(() => import("./CoffeeGlass3D"), {
   ssr: false,
 });
 
 class CanvasErrorBoundary extends Component<
-  { fallback: ReactNode; children: ReactNode },
-  { failed: boolean }
+  { fallback: ReactNode; children: ReactNode; debug: boolean },
+  { failed: boolean; error: Error | null }
 > {
-  constructor(props: { fallback: ReactNode; children: ReactNode }) {
+  constructor(props: {
+    fallback: ReactNode;
+    children: ReactNode;
+    debug: boolean;
+  }) {
     super(props);
-    this.state = { failed: false };
+    this.state = { failed: false, error: null };
   }
-  static getDerivedStateFromError(): { failed: boolean } {
-    return { failed: true };
+  static getDerivedStateFromError(error: Error): {
+    failed: boolean;
+    error: Error;
+  } {
+    return { failed: true, error };
   }
-  componentDidCatch(): void {
-    /* Sengaja diam — fallback gambar yang bicara. */
+  componentDidCatch(error: Error): void {
+    if (typeof window !== "undefined") {
+      (window as unknown as { __warkop3dError?: string }).__warkop3dError =
+        `${error.name}: ${error.message}`;
+    }
   }
   render(): ReactNode {
-    return this.state.failed ? this.props.fallback : this.props.children;
+    if (!this.state.failed) return this.props.children;
+    return (
+      <>
+        {this.props.fallback}
+        {this.props.debug && this.state.error ? (
+          <p data-3d-error className="mt-2 text-xs break-words text-red-500">
+            3D error: {this.state.error.name}: {this.state.error.message}
+          </p>
+        ) : null}
+      </>
+    );
   }
 }
 
@@ -66,13 +100,20 @@ function FallbackImage() {
 
 export default function CoffeeGlassShowcase() {
   const [mode, setMode] = useState<"loading" | "canvas" | "image">("loading");
+  const [gate, setGate] = useState<string>("pending");
+  const [debug, setDebug] = useState<boolean>(false);
 
   useEffect(() => {
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
     const desktop = window.matchMedia("(min-width: 768px)").matches;
-    setMode(!reduced && desktop && webglAvailable() ? "canvas" : "image");
+    const webgl = webglAvailable();
+    setGate(
+      `reduced=${reduced} desktop=${desktop} webgl=${webgl} w=${window.innerWidth}`,
+    );
+    setDebug(debug3dEnabled());
+    setMode(!reduced && desktop && webgl ? "canvas" : "image");
   }, []);
 
   if (mode === "image") {
@@ -82,16 +123,34 @@ export default function CoffeeGlassShowcase() {
         <p className="mt-3 text-center text-sm text-ink/60">
           Render 3D Es Kopi Susu Gula Aren — hero-nya Warkop Hits.
         </p>
+        {debug ? (
+          <p
+            data-3d-debug
+            className="mt-2 text-center text-xs break-words"
+          >
+            3D debug: mode=image gate[{gate}]
+          </p>
+        ) : null}
       </div>
     );
   }
 
   if (mode === "loading") {
     return (
-      <div
-        aria-hidden="true"
-        className="h-[340px] w-full animate-pulse rounded-3xl bg-ink/5 sm:h-[400px]"
-      />
+      <div>
+        <div
+          aria-hidden="true"
+          className="h-[340px] w-full animate-pulse rounded-3xl bg-ink/5 sm:h-[400px]"
+        />
+        {debug ? (
+          <p
+            data-3d-debug
+            className="mt-2 text-center text-xs break-words"
+          >
+            3D debug: mode=loading gate[{gate}]
+          </p>
+        ) : null}
+      </div>
     );
   }
 
@@ -103,7 +162,7 @@ export default function CoffeeGlassShowcase() {
         aria-label="Gelas Es Kopi Susu Gula Aren 3D — muter pelan, ikuti mouse. Showcase saja, bukan pemesanan."
         className="relative h-[340px] w-full overflow-hidden rounded-3xl bg-ink sm:h-[400px]"
       >
-        <CanvasErrorBoundary fallback={<FallbackImage />}>
+        <CanvasErrorBoundary fallback={<FallbackImage />} debug={debug}>
           <CoffeeGlass3D />
         </CanvasErrorBoundary>
       </div>
@@ -111,6 +170,11 @@ export default function CoffeeGlassShowcase() {
         Gelas 3D Es Kopi Susu Gula Aren — muter pelan, gerakin mouse di
         atasnya.
       </p>
+      {debug ? (
+        <p data-3d-debug className="mt-2 text-center text-xs break-words">
+          3D debug: mode=canvas gate[{gate}]
+        </p>
+      ) : null}
     </div>
   );
 }
