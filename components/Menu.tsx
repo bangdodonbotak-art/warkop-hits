@@ -1,5 +1,4 @@
 import { formatPrice, gorengan, indomie, manis, minuman, paket, site, type MenuItem, type Paket } from "@/lib/site-data";
-import AuroraGlow from "@/components/AuroraGlow";
 
 /**
  * Kartu foto satu item menu: foto iklan di atas (nama + harga sudah
@@ -80,9 +79,9 @@ function Group({
 }) {
   return (
     <div className="mt-12 first:mt-0">
-      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b-2 border-ink pb-3">
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b-2 border-cream pb-3">
         <h3 className="font-display text-2xl font-bold sm:text-3xl">{title}</h3>
-        {note ? <p className="text-sm text-ink/60">{note}</p> : null}
+        {note ? <p className="text-sm text-cream/60">{note}</p> : null}
       </div>
       <div className={gridClass}>{children}</div>
     </div>
@@ -103,12 +102,11 @@ function Group({
 export default function Menu() {
   return (
     <section id="menu" aria-label="Menu Warkop Hits" className="relative mx-auto max-w-5xl overflow-hidden px-5 py-20">
-      <AuroraGlow tone="cream" className="absolute inset-0" />
       <div className="relative">
       <h2 className="font-display text-4xl font-black leading-none sm:text-6xl">
         Menu
       </h2>
-      <p className="mt-3 max-w-xl text-base leading-relaxed text-ink/70 sm:text-lg">
+      <p className="mt-3 max-w-xl text-base leading-relaxed text-cream/70 sm:text-lg">
         Semua {site.priceNote}. Indomie hack, gorengan dadakan, dan es kopi
         susu gula aren — harga final, langsung pesan di kasir.
       </p>

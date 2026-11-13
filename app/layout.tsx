@@ -106,7 +106,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full bg-cream font-sans text-ink antialiased">
+      <body className="min-h-full bg-ink font-sans text-cream antialiased">
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "@/lib/motion";
-import AuroraGlow from "@/components/AuroraGlow";
 
 /**
  * Chapter 2 — Jalan Masuk. Scrub VERTIKAL: scroll = kamera maju ke dalam kios.
@@ -57,7 +56,6 @@ export default function WalkIn() {
       aria-label="Jalan masuk ke kios"
       className="relative mx-auto max-w-5xl overflow-hidden px-5 pb-20"
     >
-      <AuroraGlow tone="cream" className="absolute inset-0" />
       <div
         ref={imgWrapRef}
         className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-ink sm:aspect-[16/9]"
@@ -83,7 +81,7 @@ export default function WalkIn() {
         <h2 className="font-display text-3xl font-bold leading-tight sm:text-4xl">
           Pintu selalu terbuka.
         </h2>
-        <p className="mt-3 text-base leading-relaxed text-ink/70 sm:text-lg">
+        <p className="mt-3 text-base leading-relaxed text-cream/70 sm:text-lg">
           Kios 3x3 satu lantai, depan terbuka penuh tanpa pintu. Lorong tengah
           kosong buat jalan masuk, dua meja nempel di dinding kiri kanan.
           Masuk, duduk, pesan — sesimpel itu.

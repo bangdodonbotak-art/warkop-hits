@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "@/lib/motion";
-import AuroraGlow from "@/components/AuroraGlow";
 
 /** Chapter 5 — Nongkrong. Meja buat nugas, kursi buat ngobrol. */
 export default function Hangout() {
@@ -41,7 +40,6 @@ export default function Hangout() {
       aria-label="Nongkrong"
       className="relative mx-auto max-w-5xl scroll-mt-24 overflow-hidden px-5 pb-20"
     >
-      <AuroraGlow tone="cream" className="absolute inset-0" />
       <div className="relative grid items-start gap-10 md:grid-cols-2">
         <div data-hangout-reveal>
           <h2 className="font-display text-3xl font-bold leading-tight sm:text-4xl">
@@ -49,16 +47,16 @@ export default function Hangout() {
             <br />
             kursi buat ngobrol.
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-ink/70 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">
             Dua meja kayu, enam kursi, lorong tengah yang lapang. Laptop
             dibuka, Indomie datang, es kopi dipegang — malam jalan terus
             sampai subuh.
           </p>
-          <p className="mt-4 text-base leading-relaxed text-ink/70 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">
             Datang sendiri boleh, berdua lebih rame. Yang penting jangan
             pulang lapar.
           </p>
-          <p className="mt-4 text-base leading-relaxed text-ink/70 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-cream/70 sm:text-lg">
             Buka 24 jam, jadi jam dua pagi pun masih ada yang nugas di sini.
             Meja yang sama, kopi yang sama — makin malam, makin rame.
           </p>

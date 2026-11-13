@@ -5,7 +5,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { site } from "@/lib/site-data";
 import { prefersReducedMotion } from "@/lib/motion";
-import AuroraGlow from "@/components/AuroraGlow";
 
 /**
  * Chapter 1 — Hero. Video full-bleed, headline DI BAWAH video (bukan di atasnya).
@@ -208,7 +207,6 @@ export default function Hero() {
         ) : null}
       </div>
 
-      <AuroraGlow tone="night" className="relative bg-ink">
       <div className="mx-auto max-w-5xl px-5 pb-16 pt-10 text-cream sm:pt-14">
         <p className="mb-4 flex flex-wrap items-center gap-2 text-sm font-semibold">
           <span className="rounded-full bg-orange px-3 py-1 text-onorange">
@@ -250,7 +248,6 @@ export default function Hero() {
           foto kios yang sudah buka.
         </p>
       </div>
-      </AuroraGlow>
     </section>
   );
 }

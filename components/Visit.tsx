@@ -1,7 +1,6 @@
 "use client";
 
 import { site } from "@/lib/site-data";
-import AuroraGlow from "@/components/AuroraGlow";
 
 /**
  * Chapter 6 — Visit / Datang. Buka 24 jam, Depok.
@@ -9,8 +8,7 @@ import AuroraGlow from "@/components/AuroraGlow";
  */
 export default function Visit() {
   return (
-    <section id="datang" aria-label="Datang ke Warkop Hits" className="relative overflow-hidden bg-ink py-20 text-cream">
-      <AuroraGlow tone="night" className="absolute inset-0" />
+    <section id="datang" aria-label="Datang ke Warkop Hits" className="relative overflow-hidden py-20 text-cream">
       <div className="relative mx-auto grid max-w-5xl items-center gap-10 px-5 md:grid-cols-2">
         <div>
           <h2 className="font-display text-4xl font-black leading-none sm:text-6xl">

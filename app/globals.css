@@ -31,8 +31,8 @@ html.lenis body {
 }
 
 body {
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--cream);
   font-family: var(--font-sans);
   overflow-x: hidden;
 }
