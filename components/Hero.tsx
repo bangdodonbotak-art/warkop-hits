@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { site } from "@/lib/site-data";
 import { prefersReducedMotion } from "@/lib/motion";
+import AuroraGlow from "@/components/AuroraGlow";
 
 /**
  * Chapter 1 — Hero. Video full-bleed, headline DI BAWAH video (bukan di atasnya).
@@ -207,12 +208,13 @@ export default function Hero() {
         ) : null}
       </div>
 
-      <div className="mx-auto max-w-5xl px-5 pb-16 pt-10 sm:pt-14">
+      <AuroraGlow tone="night" className="relative bg-ink">
+      <div className="mx-auto max-w-5xl px-5 pb-16 pt-10 text-cream sm:pt-14">
         <p className="mb-4 flex flex-wrap items-center gap-2 text-sm font-semibold">
           <span className="rounded-full bg-orange px-3 py-1 text-onorange">
             {site.hoursLabel}
           </span>
-          <span className="rounded-full border border-ink/25 px-3 py-1">
+          <span className="rounded-full border border-cream/25 px-3 py-1">
             {site.locationShort}
           </span>
         </p>
@@ -221,7 +223,7 @@ export default function Hero() {
           <br />
           Duduk. Ngopi.
         </h1>
-        <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink/75 sm:text-xl">
+        <p className="mt-5 max-w-xl text-lg leading-relaxed text-cream/75 sm:text-xl">
           {site.heroSub} Satu malam nongkrong di Warkop Hits — dari trotoar,
           masuk lewat pintu terbuka, duduk, dan pesan yang bikin betah.
         </p>
@@ -243,11 +245,12 @@ export default function Hero() {
             {site.heroCta} ↓
           </a>
         </div>
-        <p className="mt-8 text-xs leading-relaxed text-ink/50">
+        <p className="mt-8 text-xs leading-relaxed text-cream/50">
           Video di atas adalah render konsep — gambaran suasana kios, bukan
           foto kios yang sudah buka.
         </p>
       </div>
+      </AuroraGlow>
     </section>
   );
 }

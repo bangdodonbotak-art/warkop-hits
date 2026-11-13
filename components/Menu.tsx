@@ -1,5 +1,5 @@
 import { formatPrice, gorengan, indomie, manis, minuman, paket, site, type MenuItem, type Paket } from "@/lib/site-data";
-import AmbientGlow from "@/components/AmbientGlow";
+import AuroraGlow from "@/components/AuroraGlow";
 
 /**
  * Kartu foto satu item menu: foto iklan di atas (nama + harga sudah
@@ -103,7 +103,7 @@ function Group({
 export default function Menu() {
   return (
     <section id="menu" aria-label="Menu Warkop Hits" className="relative mx-auto max-w-5xl overflow-hidden px-5 py-20">
-      <AmbientGlow tone="cream" />
+      <AuroraGlow tone="cream" className="absolute inset-0" />
       <div className="relative">
       <h2 className="font-display text-4xl font-black leading-none sm:text-6xl">
         Menu

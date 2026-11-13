@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { site } from "@/lib/site-data";
-import AmbientGlow from "@/components/AmbientGlow";
+import AuroraGlow from "@/components/AuroraGlow";
 
 /** Footer — jujur soal render konsep & status kios. */
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-cream/10 bg-ink pb-10 pt-14 text-cream">
-      <AmbientGlow tone="night" />
+      <AuroraGlow tone="night" className="absolute inset-0" />
       <div className="relative mx-auto max-w-5xl px-5">
         <div className="flex items-center gap-3">
           <Image

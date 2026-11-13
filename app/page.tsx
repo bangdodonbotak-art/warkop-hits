@@ -12,13 +12,14 @@ import Footer from "@/components/Footer";
  * Hero → Jalan Masuk → Bar → Menu → Nongkrong → Visit.
  * Tanpa komponen pemesanan interaktif (dihapus total per keputusan Dony 13 Nov 18:01 WIB).
  *
- * Background dinamis (permintaan Dony 13 Nov 21:42 WIB): tiap chapter
- * kecuali Hero (videonya sudah dinamis) punya AmbientGlow sebagai anak
- * PERTAMA di dalam section-nya sendiri — bukan di wrapper luar.
- * Pelajaran 13 Nov 21:53 WIB: glow di wrapper luar TIDAK kelihatan di
- * chapter gelap karena bg-ink section yang opaque menutupinya; di dalam
- * section, glow melayang DI ATAS bg tapi DI BAWAH konten. Tone "night"
- * di Bar/Visit/Footer, "cream" di Jalan Masuk/Menu/Nongkrong.
+ * Background dinamis (permintaan Dony 13 Nov 21:42 WIB, Aurora ember
+ * dipilih 13 Nov 22:09 WIB): tiap chapter punya AuroraGlow sebagai anak
+ * PERTAMA di dalam section-nya sendiri — bukan di wrapper luar — dan
+ * blok headline Hero juga (tone night, teks jadi krem). Pelajaran
+ * 13 Nov 21:53 WIB: glow di wrapper luar TIDAK kelihatan di chapter
+ * gelap karena bg-ink section yang opaque menutupinya; di dalam section,
+ * glow melayang DI ATAS bg tapi DI BAWAH konten. Tone "night" di
+ * Hero/Bar/Visit/Footer, "cream" di Jalan Masuk/Menu/Nongkrong.
  */
 export default function Home() {
   return (

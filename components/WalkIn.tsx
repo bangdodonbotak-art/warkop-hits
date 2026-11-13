@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "@/lib/motion";
-import AmbientGlow from "@/components/AmbientGlow";
+import AuroraGlow from "@/components/AuroraGlow";
 
 /**
  * Chapter 2 — Jalan Masuk. Scrub VERTIKAL: scroll = kamera maju ke dalam kios.
@@ -57,7 +57,7 @@ export default function WalkIn() {
       aria-label="Jalan masuk ke kios"
       className="relative mx-auto max-w-5xl overflow-hidden px-5 pb-20"
     >
-      <AmbientGlow tone="cream" />
+      <AuroraGlow tone="cream" className="absolute inset-0" />
       <div
         ref={imgWrapRef}
         className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-ink sm:aspect-[16/9]"

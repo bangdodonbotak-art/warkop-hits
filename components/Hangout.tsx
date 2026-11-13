@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "@/lib/motion";
-import AmbientGlow from "@/components/AmbientGlow";
+import AuroraGlow from "@/components/AuroraGlow";
 
 /** Chapter 5 — Nongkrong. Meja buat nugas, kursi buat ngobrol. */
 export default function Hangout() {
@@ -41,7 +41,7 @@ export default function Hangout() {
       aria-label="Nongkrong"
       className="relative mx-auto max-w-5xl scroll-mt-24 overflow-hidden px-5 pb-20"
     >
-      <AmbientGlow tone="cream" />
+      <AuroraGlow tone="cream" className="absolute inset-0" />
       <div className="relative grid items-start gap-10 md:grid-cols-2">
         <div data-hangout-reveal>
           <h2 className="font-display text-3xl font-bold leading-tight sm:text-4xl">
