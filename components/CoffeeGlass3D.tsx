@@ -1,22 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 /**
- * Gelas Es Kopi Susu Gula Aren 3D — REALISTIS (rebuild 13 Nov 2026).
- * Versi primitif sebelumnya (silinder/kotak, warna datar) dinilai Dony
- * "gagal, ga realistis" — jadi gelas dibangun ulang dengan teknik
- * product-render: profil gelas LatheGeometry, kaca transmission asli
- * (refraksi), es transparan, lapisan gula aren → kopi → susu, environment
- * map RoomEnvironment (refleksi), pencahayaan 3 titik + bayangan lembut,
- * meja kayu bertekstur prosedural + backdrop malam (gradasi + bokeh +
- * glow oranye). Semua tekstur dibuat prosedural saat runtime (canvas 2D),
- * tanpa aset eksternal. Gelas tetap berdiri DI ATAS meja, bukan melayang.
- * Gerakan: putar pelan (spin) + parallax kamera mengikuti pointer
- * (mouse / sentuhan) — gelasnya sendiri tidak miring.
+ * Gelas Es Kopi Susu Gula Aren — 2.5D FOTO (rebuild 13 Nov 2026, cara Dony).
+ * Versi primitif R3F dinilai Dony "gagal, ga realistis", versi transmission
+ * dinilai ~6/10. Arahan Dony 20:46 WIB: pakai FOTO minuman yg sudah dibuat,
+ * remove background, convert jadi 3D. Jadi: foto es kopi susu terbaik
+ * (render 3D fotorealistis, background krem polos) di-remove background-nya
+ * (PIL + numpy + scipy, tanpa model AI) jadi cutout transparan, lalu
+ * cutout itu jadi objek di scene 3D — berdiri di atas meja kayu, di depan
+ * backdrop malam, goyang pelan + parallax kamera. Fotonya yg bawa
+ * realisme (es batu asli, kondensasi, lapisan gula aren/kopi/susu,
+ * sedotan hitam); scene 3D yg bawa gerak. Kalau ini masih gagal, 3D dihapus.
+ * Gelas tetap berdiri DI ATAS meja, bukan melayang.
  */
 
 // ---------- tekstur prosedural (canvas 2D, dibuat saat runtime) ----------
@@ -211,104 +211,45 @@ function WoodTable() {
   );
 }
 
-// ---------- gelas: profil lathe + kaca transmission + isi ----------
+// ---------- gelas foto (cutout) — 2.5D ----------
 
-// Profil gelas (x = radius, y = tinggi): dinding luar naik, lewat bibir,
-// dinding dalam turun, alas dalam — dinding punya ketebalan.
-const CUP_PROFILE: Array<[number, number]> = [
-  [0.0, -1.2],
-  [0.55, -1.2],
-  [0.72, -1.18],
-  [0.78, -1.05],
-  [0.84, -0.5],
-  [0.9, 0.0],
-  [0.96, 0.6],
-  [1.0, 1.05],
-  [1.03, 1.16],
-  [1.04, 1.22],
-  [1.0, 1.24],
-  [0.96, 1.2],
-  [0.93, 0.6],
-  [0.87, 0.0],
-  [0.81, -0.5],
-  [0.76, -0.95],
-  [0.6, -1.04],
-  [0.0, -1.04],
-];
+// Cutout: public/assets/es-kopi-susu-cutout.webp, 827x1255 piksel,
+// dasar gelas 17px di atas bawah crop. Plane 1.95 x 2.9, pivot di dasar
+// gelas (y=-1.2, di atas meja), goyang pelan mengelilingi sumbu dasar.
+const PLANE_W = 1.95;
+const PLANE_H = 2.9;
+const PLANE_Y = 1.41;
 
-const ICE: Array<[[number, number, number], [number, number, number], number]> = [
-  [[-0.28, 0.85, 0.15], [0.4, 0.3, 0.2], 0.46],
-  [[0.3, 0.8, -0.12], [0.2, 0.7, -0.3], 0.44],
-  [[0.0, 0.95, 0.22], [0.5, 0.1, 0.4], 0.42],
-];
-
-function GlassModel() {
-  const spin = useRef<THREE.Group>(null);
-  const cupPoints = useMemo(
-    () => CUP_PROFILE.map(([x, y]) => new THREE.Vector2(x, y)),
-    [],
+function PhotoCup() {
+  const sway = useRef<THREE.Group>(null);
+  const tex = useLoader(
+    THREE.TextureLoader,
+    "/assets/es-kopi-susu-cutout.webp",
   );
+  useEffect(() => {
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+  }, [tex]);
 
-  useFrame((_, delta) => {
-    if (spin.current) spin.current.rotation.y += delta * 0.12;
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (sway.current) {
+      sway.current.rotation.y = Math.sin(t * 0.3) * 0.14;
+      sway.current.rotation.x = Math.sin(t * 0.23) * 0.03;
+    }
   });
 
   return (
-    <group ref={spin} position={[0, -0.1, 0]}>
-      {/* Dinding gelas — kaca transmission asli (refraksi) */}
-      <mesh>
-        <latheGeometry args={[cupPoints, 64]} />
-        <meshPhysicalMaterial
-          transmission={1}
-          thickness={0.18}
-          roughness={0.06}
-          ior={1.5}
-          clearcoat={0.4}
-          clearcoatRoughness={0.1}
-          specularIntensity={1}
-          envMapIntensity={1.2}
+    <group ref={sway} position={[0, -1.2, 0]}>
+      <mesh position={[0, PLANE_Y, 0]}>
+        <planeGeometry args={[PLANE_W, PLANE_H]} />
+        <meshBasicMaterial
+          map={tex}
+          transparent
           side={THREE.DoubleSide}
+          toneMapped={false}
           depthWrite={false}
         />
-      </mesh>
-      {/* Lapisan gula aren (bawah, gelap) */}
-      <mesh position={[0, -0.8, 0]}>
-        <cylinderGeometry args={[0.78, 0.72, 0.45, 48]} />
-        <meshStandardMaterial color="#2a1408" roughness={0.25} />
-      </mesh>
-      {/* Lapisan kopi */}
-      <mesh position={[0, 0.0, 0]}>
-        <cylinderGeometry args={[0.9, 0.78, 1.15, 48]} />
-        <meshStandardMaterial color="#5a2e14" roughness={0.2} />
-      </mesh>
-      {/* Lapisan susu di atas */}
-      <mesh position={[0, 0.65, 0]}>
-        <cylinderGeometry args={[0.92, 0.9, 0.16, 48]} />
-        <meshStandardMaterial color="#e8d5b5" roughness={0.35} />
-      </mesh>
-      {/* Es batu — transparan (bukan transmission, supaya tetap terlihat
-          lewat dinding kaca), putih kebiruan */}
-      {ICE.map(([pos, rot, size], i) => (
-        <mesh key={i} position={pos} rotation={rot} castShadow>
-          <boxGeometry args={[size, size, size]} />
-          <meshPhysicalMaterial
-            color="#eaf6ff"
-            transparent
-            opacity={0.65}
-            roughness={0.12}
-            clearcoat={0.6}
-            envMapIntensity={1.5}
-          />
-        </mesh>
-      ))}
-      {/* Sedotan oranye */}
-      <mesh
-        position={[0.58, 1.15, 0.05]}
-        rotation={[0, 0, -0.2]}
-        castShadow
-      >
-        <cylinderGeometry args={[0.06, 0.06, 2.4, 16]} />
-        <meshStandardMaterial color="#e85d1f" roughness={0.3} />
       </mesh>
     </group>
   );
@@ -362,7 +303,9 @@ export default function CoffeeGlass3D() {
       />
       <NightBackdrop />
       <WoodTable />
-      <GlassModel />
+      <Suspense fallback={null}>
+        <PhotoCup />
+      </Suspense>
       <CameraRig />
     </Canvas>
   );
