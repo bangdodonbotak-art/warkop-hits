@@ -1,55 +1,81 @@
-import { formatPrice, gorengan, indomie, manis, minuman, paket, site, type MenuItem } from "@/lib/site-data";
+import { formatPrice, gorengan, indomie, manis, minuman, paket, site, type MenuItem, type Paket } from "@/lib/site-data";
 import CoffeeGlassShowcase from "@/components/CoffeeGlassShowcase";
 
-/** Render 3D berlatar malam (menu-3d/*-malam-*.webp) per item — satu foto per item yang sesuai. */
-const thumbs: Record<string, string> = {
-  "Indomie Nyemek Telur Keju": "/assets/media-generation-3d-indomie-nyemek-malam-0-b4e8995a-328c-403c-a23b-75aa6f08f584.webp",
-  "Indomie Goreng Sosis Mozzarella": "/assets/media-generation-3d-indomie-goreng-malam-0-1613ce76-3031-4acb-9f09-b941c4eedf3b.webp",
-  "Es Coklat Lava Cheese": "/assets/media-generation-3d-es-coklat-lava-malam-0-dd5f8641-a005-4668-922c-c6563bd68f27.webp",
-};
-
-function Row({ item }: { item: MenuItem }) {
-  const thumb = thumbs[item.name];
+/**
+ * Kartu foto satu item menu: foto iklan di atas (nama + harga sudah
+ * tercetak di gambar), nama + harga di bawah dari lib/site-data.ts.
+ * Foto 1920x1280 (3:2), lazy-load. Mobile 375px: 1 kolom — foto
+ * tetap lebar penuh supaya teks di gambar masih kebaca.
+ */
+function Card({ item }: { item: MenuItem }) {
   return (
-    <li className="flex gap-3 py-3">
-      {thumb ? (
-        // eslint-disable-next-line @next/next/no-img-element
+    <article className="overflow-hidden rounded-2xl bg-white ring-1 ring-ink/10">
+      <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={thumb}
-          alt=""
-          aria-hidden="true"
-          className="h-16 w-16 shrink-0 rounded-xl object-cover sm:h-20 sm:w-20"
+          src={item.image}
+          alt={item.name}
+          className="aspect-[3/2] w-full object-cover"
           loading="lazy"
+          decoding="async"
         />
-      ) : null}
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-baseline">
-          <span className="text-base font-semibold sm:text-lg">{item.name}</span>
-          {item.tag ? (
-            <span className="ml-2 shrink-0 rounded-full bg-orange px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-onorange">
-              {item.tag}
-            </span>
-          ) : null}
-          <span className="menu-leader" aria-hidden="true" />
-          <span className="shrink-0 font-display text-base font-bold sm:text-lg">
+        {item.tag ? (
+          <span className="absolute left-3 top-3 rounded-full bg-orange px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-onorange shadow">
+            {item.tag}
+          </span>
+        ) : null}
+      </div>
+      <div className="p-4">
+        <div className="flex items-baseline justify-between gap-3">
+          <h4 className="text-base font-bold leading-snug">{item.name}</h4>
+          <span className="shrink-0 font-display text-lg font-black">
             {formatPrice(item.price)}
           </span>
         </div>
-        <p className="mt-1 max-w-lg text-sm leading-relaxed text-ink/60">
+        <p className="mt-1 text-sm leading-relaxed text-ink/60">
           {item.desc}
         </p>
       </div>
-    </li>
+    </article>
+  );
+}
+
+/** Kartu paket di dalam band oranye — badan kartu krem supaya kebaca. */
+function PaketCard({ p }: { p: Paket }) {
+  return (
+    <article className="overflow-hidden rounded-2xl bg-cream text-ink shadow-sm">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={p.image}
+        alt={p.name}
+        className="aspect-[3/2] w-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+      <div className="p-4">
+        <div className="flex items-baseline justify-between gap-3">
+          <h4 className="text-base font-bold leading-snug">{p.name}</h4>
+          <span className="shrink-0 font-display text-lg font-black">
+            {formatPrice(p.price)}
+          </span>
+        </div>
+        <p className="mt-1 text-sm leading-relaxed text-ink/70">
+          {p.contents} — {p.desc}
+        </p>
+      </div>
+    </article>
   );
 }
 
 function Group({
   title,
   note,
+  gridClass = "mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3",
   children,
 }: {
   title: string;
   note?: string;
+  gridClass?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -58,15 +84,18 @@ function Group({
         <h3 className="font-display text-2xl font-bold sm:text-3xl">{title}</h3>
         {note ? <p className="text-sm text-ink/60">{note}</p> : null}
       </div>
-      <ul className="divide-y divide-ink/10">{children}</ul>
+      <div className={gridClass}>{children}</div>
     </div>
   );
 }
 
 /**
- * Chapter 4 — Menu sebagai DAFTAR BIASA.
- * Keputusan Dony 13 Nov 18:01 WIB: menu tampil biasa saja, tanpa stepper,
- * tanpa total, tanpa tombol pesan. Harga hanya dari lib/site-data.ts.
+ * Chapter 4 — Menu sebagai KARTU FOTO.
+ * Keputusan Dony 13 Nov 19:33 WIB: "Masukin semua foto yg ada harganya,
+ * ga cuma tulisan aja" — tiap item tampil dengan foto iklannya (nama +
+ * harga tercetak di gambar) + nama + harga dari lib/site-data.ts.
+ * Tetap tanpa stepper, tanpa total, tanpa tombol pesan (Racik Pesanan
+ * dihapus total 13 Nov 18:01 WIB).
  */
 export default function Menu() {
   return (
@@ -99,32 +128,36 @@ export default function Menu() {
       <div className="mt-14">
         <Group title="Indomie Hack" note="Level pedas 1–5, tambah topping tersedia di kasir">
           {indomie.map((item) => (
-            <Row key={item.name} item={item} />
+            <Card key={item.name} item={item} />
           ))}
         </Group>
 
         <Group title="Gorengan" note="Digoreng dadakan, bukan stok matang">
           {gorengan.map((item) => (
-            <Row key={item.name} item={item} />
+            <Card key={item.name} item={item} />
           ))}
         </Group>
 
         <Group title="Manis & Pendamping" note="Pasangan wajib mie panas">
           {manis.map((item) => (
-            <Row key={item.name} item={item} />
+            <Card key={item.name} item={item} />
           ))}
         </Group>
       </div>
 
-      {/* Momen 3D (§12 blueprint): gelas Es Kopi 3D di samping daftar minuman.
+      {/* Momen 3D (§12 blueprint): gelas Es Kopi 3D di samping kartu minuman.
           Showcase saja — bukan pemesanan, tanpa harga di sini. */}
       <div className="mt-14 grid gap-8 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="md:sticky md:top-24 md:self-start">
           <CoffeeGlassShowcase />
         </div>
-        <Group title="Minuman" note="Cup 22oz, kecuali Es Teh Jumbo">
+        <Group
+          title="Minuman"
+          note="Cup 22oz, kecuali Es Teh Jumbo"
+          gridClass="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-2"
+        >
           {minuman.map((item) => (
-            <Row key={item.name} item={item} />
+            <Card key={item.name} item={item} />
           ))}
         </Group>
       </div>
@@ -136,21 +169,11 @@ export default function Menu() {
         <p className="mt-1 text-sm font-medium text-onorange/80">
           Buat yang mau kenyang tanpa mikir.
         </p>
-        <ul className="mt-6 divide-y divide-onorange/25">
+        <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
           {paket.map((p) => (
-            <li key={p.name} className="py-4 first:pt-0 last:pb-0">
-              <div className="flex items-baseline justify-between gap-4">
-                <span className="text-lg font-bold">{p.name}</span>
-                <span className="shrink-0 font-display text-lg font-black">
-                  {formatPrice(p.price)}
-                </span>
-              </div>
-              <p className="mt-1 text-sm leading-relaxed text-onorange/85">
-                {p.contents} — {p.desc}
-              </p>
-            </li>
+            <PaketCard key={p.name} p={p} />
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );
