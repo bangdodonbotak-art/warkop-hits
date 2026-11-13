@@ -1,5 +1,4 @@
 import { formatPrice, gorengan, indomie, manis, minuman, paket, site, type MenuItem, type Paket } from "@/lib/site-data";
-import CoffeeGlassShowcase from "@/components/CoffeeGlassShowcase";
 
 /**
  * Kartu foto satu item menu: foto iklan di atas (nama + harga sudah
@@ -96,6 +95,9 @@ function Group({
  * harga tercetak di gambar) + nama + harga dari lib/site-data.ts.
  * Tetap tanpa stepper, tanpa total, tanpa tombol pesan (Racik Pesanan
  * dihapus total 13 Nov 18:01 WIB).
+ * Momen 3D dihapus total 13 Nov 21:07 WIB atas perintah Dony
+ * ("Hapus aja 3D-nya") — panel gelas, komponen, dan dependensi
+ * three/R3F sudah tidak ada.
  */
 export default function Menu() {
   return (
@@ -145,22 +147,11 @@ export default function Menu() {
         </Group>
       </div>
 
-      {/* Momen 3D (§12 blueprint): gelas Es Kopi 3D di samping kartu minuman.
-          Showcase saja — bukan pemesanan, tanpa harga di sini. */}
-      <div className="mt-14 grid gap-8 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <div className="md:sticky md:top-24 md:self-start">
-          <CoffeeGlassShowcase />
-        </div>
-        <Group
-          title="Minuman"
-          note="Cup 22oz, kecuali Es Teh Jumbo"
-          gridClass="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-2"
-        >
-          {minuman.map((item) => (
-            <Card key={item.name} item={item} />
-          ))}
-        </Group>
-      </div>
+      <Group title="Minuman" note="Cup 22oz, kecuali Es Teh Jumbo">
+        {minuman.map((item) => (
+          <Card key={item.name} item={item} />
+        ))}
+      </Group>
 
       <div className="mt-14 rounded-3xl bg-orange px-6 py-8 text-onorange sm:px-10">
         <h3 className="font-display text-2xl font-black sm:text-3xl">
