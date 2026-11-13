@@ -206,7 +206,7 @@ export default function CoffeeGlassShowcase() {
       <div
         data-3d-canvas
         role="img"
-        aria-label="Gelas Es Kopi Susu Gula Aren 3D — muter pelan, ikuti mouse. Showcase saja, bukan pemesanan."
+        aria-label="Gelas Es Kopi Susu Gula Aren 3D — muter pelan, geser jari atau mouse. Showcase saja, bukan pemesanan."
         className="relative h-[340px] w-full overflow-hidden rounded-3xl bg-ink sm:h-[400px]"
       >
         <CanvasErrorBoundary fallback={<FallbackImage />} debug={debug}>
@@ -214,8 +214,8 @@ export default function CoffeeGlassShowcase() {
         </CanvasErrorBoundary>
       </div>
       <p className="mt-3 text-center text-sm text-ink/60">
-        Gelas 3D Es Kopi Susu Gula Aren — muter pelan, gerakin mouse di
-        atasnya.
+        Gelas 3D Es Kopi Susu Gula Aren — muter pelan, geser jari atau
+        mouse di atasnya.
       </p>
       {debug ? (
         <p data-3d-debug className="mt-2 text-center text-xs break-words">
