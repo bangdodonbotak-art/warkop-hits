@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { site } from "@/lib/site-data";
+import AmbientGlow from "@/components/AmbientGlow";
 
 /** Footer — jujur soal render konsep & status kios. */
 export default function Footer() {
   return (
-    <footer className="relative border-t border-cream/10 bg-ink pb-10 pt-14 text-cream">
-      <div className="mx-auto max-w-5xl px-5">
+    <footer className="relative overflow-hidden border-t border-cream/10 bg-ink pb-10 pt-14 text-cream">
+      <AmbientGlow tone="night" />
+      <div className="relative mx-auto max-w-5xl px-5">
         <div className="flex items-center gap-3">
           <Image
             src="/assets/brand/favicon.svg"

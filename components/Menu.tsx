@@ -1,4 +1,5 @@
 import { formatPrice, gorengan, indomie, manis, minuman, paket, site, type MenuItem, type Paket } from "@/lib/site-data";
+import AmbientGlow from "@/components/AmbientGlow";
 
 /**
  * Kartu foto satu item menu: foto iklan di atas (nama + harga sudah
@@ -101,7 +102,9 @@ function Group({
  */
 export default function Menu() {
   return (
-    <section id="menu" aria-label="Menu Warkop Hits" className="relative mx-auto max-w-5xl px-5 py-20">
+    <section id="menu" aria-label="Menu Warkop Hits" className="relative mx-auto max-w-5xl overflow-hidden px-5 py-20">
+      <AmbientGlow tone="cream" />
+      <div className="relative">
       <h2 className="font-display text-4xl font-black leading-none sm:text-6xl">
         Menu
       </h2>
@@ -165,6 +168,7 @@ export default function Menu() {
             <PaketCard key={p.name} p={p} />
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

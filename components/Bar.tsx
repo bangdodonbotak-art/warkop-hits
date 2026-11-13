@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "@/lib/motion";
+import AmbientGlow from "@/components/AmbientGlow";
 
 /** Chapter 3 — Bar. Barista tuang kopi susu, diseduh per order. */
 export default function Bar() {
@@ -37,9 +38,10 @@ export default function Bar() {
     <section
       ref={sectionRef}
       aria-label="Bar — diseduh di depan mata"
-      className="relative bg-ink py-20 text-cream"
+      className="relative overflow-hidden bg-ink py-20 text-cream"
     >
-      <div className="mx-auto grid max-w-5xl items-center gap-10 px-5 md:grid-cols-2">
+      <AmbientGlow tone="night" />
+      <div className="relative mx-auto grid max-w-5xl items-center gap-10 px-5 md:grid-cols-2">
         <div data-bar-reveal className="overflow-hidden rounded-3xl">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

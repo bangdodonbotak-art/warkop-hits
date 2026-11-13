@@ -1,6 +1,7 @@
 "use client";
 
 import { site } from "@/lib/site-data";
+import AmbientGlow from "@/components/AmbientGlow";
 
 /**
  * Chapter 6 — Visit / Datang. Buka 24 jam, Depok.
@@ -8,8 +9,9 @@ import { site } from "@/lib/site-data";
  */
 export default function Visit() {
   return (
-    <section id="datang" aria-label="Datang ke Warkop Hits" className="relative bg-ink py-20 text-cream">
-      <div className="mx-auto grid max-w-5xl items-center gap-10 px-5 md:grid-cols-2">
+    <section id="datang" aria-label="Datang ke Warkop Hits" className="relative overflow-hidden bg-ink py-20 text-cream">
+      <AmbientGlow tone="night" />
+      <div className="relative mx-auto grid max-w-5xl items-center gap-10 px-5 md:grid-cols-2">
         <div>
           <h2 className="font-display text-4xl font-black leading-none sm:text-6xl">
             {site.hoursLabel}
