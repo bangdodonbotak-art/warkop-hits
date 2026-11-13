@@ -26,12 +26,12 @@ function Card({ item }: { item: MenuItem }) {
       </div>
       <div className="p-4">
         <div className="flex items-baseline justify-between gap-3">
-          <h4 className="text-base font-bold leading-snug">{item.name}</h4>
-          <span className="shrink-0 font-display text-lg font-black">
+          <h4 className="text-base font-bold leading-snug text-ink">{item.name}</h4>
+          <span className="shrink-0 font-display text-lg font-black text-ink">
             {formatPrice(item.price)}
           </span>
         </div>
-        <p className="mt-1 text-sm leading-relaxed text-ink/60">
+        <p className="mt-1 text-sm leading-relaxed text-ink/70">
           {item.desc}
         </p>
       </div>
