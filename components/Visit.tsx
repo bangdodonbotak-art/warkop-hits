@@ -8,7 +8,7 @@ import { site } from "@/lib/site-data";
  */
 export default function Visit() {
   return (
-    <section id="datang" aria-label="Datang ke Warkop Hits" className="bg-ink py-20 text-cream">
+    <section id="datang" aria-label="Datang ke Warkop Hits" className="relative bg-ink py-20 text-cream">
       <div className="mx-auto grid max-w-5xl items-center gap-10 px-5 md:grid-cols-2">
         <div>
           <h2 className="font-display text-4xl font-black leading-none sm:text-6xl">

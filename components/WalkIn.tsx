@@ -54,7 +54,7 @@ export default function WalkIn() {
     <section
       ref={sectionRef}
       aria-label="Jalan masuk ke kios"
-      className="mx-auto max-w-5xl px-5 pb-20"
+      className="relative mx-auto max-w-5xl px-5 pb-20"
     >
       <div
         ref={imgWrapRef}

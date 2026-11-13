@@ -38,7 +38,7 @@ export default function Hangout() {
       ref={sectionRef}
       id="nongkrong"
       aria-label="Nongkrong"
-      className="mx-auto max-w-5xl scroll-mt-24 px-5 pb-20"
+      className="relative mx-auto max-w-5xl scroll-mt-24 px-5 pb-20"
     >
       <div className="grid items-start gap-10 md:grid-cols-2">
         <div data-hangout-reveal>

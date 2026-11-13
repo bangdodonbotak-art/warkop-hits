@@ -4,7 +4,7 @@ import { site } from "@/lib/site-data";
 /** Footer — jujur soal render konsep & status kios. */
 export default function Footer() {
   return (
-    <footer className="border-t border-cream/10 bg-ink pb-10 pt-14 text-cream">
+    <footer className="relative border-t border-cream/10 bg-ink pb-10 pt-14 text-cream">
       <div className="mx-auto max-w-5xl px-5">
         <div className="flex items-center gap-3">
           <Image

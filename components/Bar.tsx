@@ -37,7 +37,7 @@ export default function Bar() {
     <section
       ref={sectionRef}
       aria-label="Bar — diseduh di depan mata"
-      className="bg-ink py-20 text-cream"
+      className="relative bg-ink py-20 text-cream"
     >
       <div className="mx-auto grid max-w-5xl items-center gap-10 px-5 md:grid-cols-2">
         <div data-bar-reveal className="overflow-hidden rounded-3xl">

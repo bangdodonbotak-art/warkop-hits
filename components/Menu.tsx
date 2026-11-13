@@ -101,7 +101,7 @@ function Group({
  */
 export default function Menu() {
   return (
-    <section id="menu" aria-label="Menu Warkop Hits" className="mx-auto max-w-5xl px-5 py-20">
+    <section id="menu" aria-label="Menu Warkop Hits" className="relative mx-auto max-w-5xl px-5 py-20">
       <h2 className="font-display text-4xl font-black leading-none sm:text-6xl">
         Menu
       </h2>
