@@ -18,7 +18,7 @@ export const site = {
   description:
     "Warkop Hits — warkop kekinian di Depok buat mahasiswa dan anak nongkrong. Indomie hack, gorengan dadakan, dan es kopi susu gula aren. Nongkrong hits, harga irit.",
   priceNote: "10–18 ribu",
-  siteUrl: "https://warkophits.vercel.app", // PLACEHOLDER — ganti saat domain final diputuskan
+  siteUrl: "https://warkop-hits.vercel.app", // URL production Vercel (live 13 Nov 19:16 WIB)
 } as const;
 
 export type MenuItem = {
