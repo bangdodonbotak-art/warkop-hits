@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --color-orange: #e85d1f;
+  --color-ink: #17120e;
+  --color-cream: #f5ede3;
+  --color-wood: #8a5a33;
+  --color-onorange: #111111;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --orange: #e85d1f;
+  --ink: #17120e;
+  --cream: #f5ede3;
+  --wood: #8a5a33;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--orange);
+  color: var(--cream);
+}
+
+/* Pemimpin titik-titik ala papan menu */
+.menu-leader {
+  flex: 1 1 auto;
+  min-width: 2rem;
+  border-bottom: 2px dotted color-mix(in srgb, var(--ink) 35%, transparent);
+  margin: 0 0.6rem;
+  transform: translateY(-0.3em);
+}
+
+/* Slideshow Ken Burns hero — TIDAK lagi pakai keyframes CSS.
+   Keyframes hero-kenburns dihapus: browser headless di VM ini membekukan
+   animasi CSS (terverifikasi 13 Nov 2026 — computed animation-name kosong,
+   transform/opacity diam 6+ detik, bahkan untuk animasi trivial di halaman
+   tes). Gerak sekarang digerakkan rAF di components/Hero.tsx (terverifikasi
+   60fps di browser yang sama). Kelas .hero-slide tidak dipakai lagi. */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
