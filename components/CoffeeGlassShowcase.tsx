@@ -1,7 +1,12 @@
 "use client";
 
-import { Component, type ReactNode, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import {
+  Component,
+  type ComponentType,
+  type ReactNode,
+  useEffect,
+  useState,
+} from "react";
 
 /**
  * Jangkar visual 3D chapter Menu — gelas Es Kopi Susu Gula Aren.
@@ -14,6 +19,13 @@ import dynamic from "next/dynamic";
  * karena canvas tidak pernah mount di browser live dan error boundary
  * selama ini menelan error-nya diam-diam. Hapus blok debug ini setelah
  * root cause ketemu.
+ *
+ * FASE 2 (13 Nov 2026): next/dynamic diganti import manual ber-instrumentasi.
+ * Pembacaan 19:31 WIB: mode=canvas, semua gate lolos, TANPA error tercatat,
+ * tapi tetap tidak ada <canvas> — jadi yang harus dibedakan adalah: chunk
+ * gagal/nyangkut saat load, atau chunk ke-load tapi Canvas tidak mount.
+ * Loader di bawah mencatat load=pending/loaded/failed + pesan error +
+ * canvasFound (apakah <canvas> sungguhan ada di DOM 3 detik setelah load).
  */
 function debug3dEnabled(): boolean {
   if (typeof window === "undefined") return false;
@@ -23,9 +35,6 @@ function debug3dEnabled(): boolean {
     return false;
   }
 }
-const CoffeeGlass3D = dynamic(() => import("./CoffeeGlass3D"), {
-  ssr: false,
-});
 
 class CanvasErrorBoundary extends Component<
   { fallback: ReactNode; children: ReactNode; debug: boolean },
@@ -102,6 +111,12 @@ export default function CoffeeGlassShowcase() {
   const [mode, setMode] = useState<"loading" | "canvas" | "image">("loading");
   const [gate, setGate] = useState<string>("pending");
   const [debug, setDebug] = useState<boolean>(false);
+  const [Glass3D, setGlass3D] = useState<ComponentType | null>(null);
+  const [loadState, setLoadState] = useState<
+    "idle" | "pending" | "loaded" | "failed"
+  >("idle");
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [canvasFound, setCanvasFound] = useState<boolean | null>(null);
 
   useEffect(() => {
     const reduced = window.matchMedia(
@@ -116,6 +131,44 @@ export default function CoffeeGlassShowcase() {
     setMode(!reduced && desktop && webgl ? "canvas" : "image");
   }, []);
 
+  // Loader ber-instrumentasi (fase 2): import manual + catat hasilnya,
+  // supaya kegagalan load chunk tidak lagi hilang diam-diam.
+  useEffect(() => {
+    if (mode !== "canvas") return;
+    let alive = true;
+    setLoadState("pending");
+    setLoadError(null);
+    import("./CoffeeGlass3D")
+      .then((m) => {
+        if (!alive) return;
+        setGlass3D(() => m.default);
+        setLoadState("loaded");
+      })
+      .catch((e: unknown) => {
+        if (!alive) return;
+        const msg =
+          e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+        setLoadState("failed");
+        setLoadError(msg);
+        if (typeof window !== "undefined") {
+          (window as unknown as { __warkop3dError?: string }).__warkop3dError =
+            msg;
+        }
+      });
+    return () => {
+      alive = false;
+    };
+  }, [mode]);
+
+  // Setelah komponen ke-load, cek apakah <canvas> sungguhan ada di DOM.
+  useEffect(() => {
+    if (mode !== "canvas" || loadState !== "loaded") return;
+    const t = window.setTimeout(() => {
+      setCanvasFound(!!document.querySelector("[data-3d-canvas] canvas"));
+    }, 3000);
+    return () => window.clearTimeout(t);
+  }, [mode, loadState]);
+
   if (mode === "image") {
     return (
       <div>
@@ -124,10 +177,7 @@ export default function CoffeeGlassShowcase() {
           Render 3D Es Kopi Susu Gula Aren — hero-nya Warkop Hits.
         </p>
         {debug ? (
-          <p
-            data-3d-debug
-            className="mt-2 text-center text-xs break-words"
-          >
+          <p data-3d-debug className="mt-2 text-center text-xs break-words">
             3D debug: mode=image gate[{gate}]
           </p>
         ) : null}
@@ -143,10 +193,7 @@ export default function CoffeeGlassShowcase() {
           className="h-[340px] w-full animate-pulse rounded-3xl bg-ink/5 sm:h-[400px]"
         />
         {debug ? (
-          <p
-            data-3d-debug
-            className="mt-2 text-center text-xs break-words"
-          >
+          <p data-3d-debug className="mt-2 text-center text-xs break-words">
             3D debug: mode=loading gate[{gate}]
           </p>
         ) : null}
@@ -163,7 +210,7 @@ export default function CoffeeGlassShowcase() {
         className="relative h-[340px] w-full overflow-hidden rounded-3xl bg-ink sm:h-[400px]"
       >
         <CanvasErrorBoundary fallback={<FallbackImage />} debug={debug}>
-          <CoffeeGlass3D />
+          {Glass3D ? <Glass3D /> : null}
         </CanvasErrorBoundary>
       </div>
       <p className="mt-3 text-center text-sm text-ink/60">
@@ -172,7 +219,14 @@ export default function CoffeeGlassShowcase() {
       </p>
       {debug ? (
         <p data-3d-debug className="mt-2 text-center text-xs break-words">
-          3D debug: mode=canvas gate[{gate}]
+          3D debug: mode=canvas gate[{gate}] load={loadState}
+          {loadError ? ` loadError=${loadError}` : ""} canvas=
+          {canvasFound === null ? "?" : String(canvasFound)}
+        </p>
+      ) : null}
+      {debug && loadError ? (
+        <p data-3d-error className="mt-2 text-xs break-words text-red-500">
+          3D load error: {loadError}
         </p>
       ) : null}
     </div>
